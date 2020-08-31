@@ -121,7 +121,7 @@ func (c *Cli) RunTerminal(shell string, stdout, stderr io.Writer) error {
 }
 
 func main() {
-	cli := New("daymenu.cn", "root", "Xiaohei1314", 22)
+	cli := New("", "", "", 22)
 	// output, err := cli.Run("free -h")
 	// fmt.Printf("%v\n%v", output, err)
 	cli.RunTerminal("/bin/bash", os.Stdout, os.Stdin)
