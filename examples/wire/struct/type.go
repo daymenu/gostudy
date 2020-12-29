@@ -1,6 +1,10 @@
 package main
 
-import "github.com/google/wire"
+import (
+	"sync"
+
+	"github.com/google/wire"
+)
 
 // Foo foo
 type Foo int
@@ -20,6 +24,7 @@ func ProvideBar() Bar {
 
 // FooBar foobar
 type FooBar struct {
+	mu    sync.Mutex `wire:"-"` //不需要wire来初始化
 	MyFoo Foo
 	MyBar Bar
 }
@@ -31,3 +36,7 @@ var Set = wire.NewSet(
 	// wire.Struct(new(FooBar), "MyFoo", "MyBar"),
 	wire.Struct(new(FooBar), "*"), // *代表全部字段
 )
+
+func provoideFooBar() FooBar {
+	return FooBar{MyFoo: Foo(2), MyBar: Bar(1)}
+}

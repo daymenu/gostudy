@@ -7,6 +7,16 @@ package main
 
 // Injectors from wire.go:
 
+func injectFooBarPointer() *FooBar {
+	foo := ProvideFoo()
+	bar := ProvideBar()
+	fooBar := &FooBar{
+		MyFoo: foo,
+		MyBar: bar,
+	}
+	return fooBar
+}
+
 func injectFooBar() FooBar {
 	foo := ProvideFoo()
 	bar := ProvideBar()
@@ -15,4 +25,10 @@ func injectFooBar() FooBar {
 		MyBar: bar,
 	}
 	return fooBar
+}
+
+func injectFooBarOfFoo() Foo {
+	fooBar := provoideFooBar()
+	foo := fooBar.MyFoo
+	return foo
 }

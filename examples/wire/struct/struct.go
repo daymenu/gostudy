@@ -4,5 +4,8 @@ import "fmt"
 
 func main() {
 	foobar := injectFooBar()
-	fmt.Println(foobar)
+	fmt.Printf("%d", foobar.MyBar)
+
+	fb := injectFooBarPointer()
+	fmt.Println(fb)
 }
