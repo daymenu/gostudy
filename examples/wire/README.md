@@ -17,4 +17,17 @@ go get github.com/google/wire/cmd/wire
 [Best Practices](https://github.com/google/wire/blob/master/docs/best-practices.md)  
 [FQA](https://github.com/google/wire/blob/master/docs/faq.md)  
 
+## 最佳实战
+
+### 类型区别
+
+如果你需要一个基本类型来注入，请创建一个新的类型来避免冲突
+
+```go
+type MySQLConnectionString string
+```
+
+### 结构体选项
+
+
 -----------我也是有底线的-----------
