@@ -8,6 +8,54 @@ import (
 )
 
 var (
+	// AdminsColumns holds the columns for the "admins" table.
+	AdminsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "age", Type: field.TypeInt},
+		{Name: "rank", Type: field.TypeFloat64, Nullable: true},
+		{Name: "active", Type: field.TypeBool},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "url", Type: field.TypeJSON, Nullable: true},
+		{Name: "strings", Type: field.TypeJSON, Nullable: true},
+		{Name: "state", Type: field.TypeEnum, Nullable: true, Enums: []string{"on", "off"}},
+		{Name: "uuid", Type: field.TypeUUID},
+	}
+	// AdminsTable holds the schema information for the "admins" table.
+	AdminsTable = &schema.Table{
+		Name:        "admins",
+		Columns:     AdminsColumns,
+		PrimaryKey:  []*schema.Column{AdminsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// CardsColumns holds the columns for the "cards" table.
+	CardsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "amount", Type: field.TypeFloat64, SchemaType: map[string]string{"mysql": "decimal(6,2)", "postgres": "numeric"}},
+		{Name: "card_id", Type: field.TypeString},
+	}
+	// CardsTable holds the schema information for the "cards" table.
+	CardsTable = &schema.Table{
+		Name:        "cards",
+		Columns:     CardsColumns,
+		PrimaryKey:  []*schema.Column{CardsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// GroupsColumns holds the columns for the "groups" table.
+	GroupsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "nillable_name", Type: field.TypeString, Nullable: true},
+		{Name: "optional_name", Type: field.TypeString, Nullable: true},
+		{Name: "creation_date", Type: field.TypeTime},
+	}
+	// GroupsTable holds the schema information for the "groups" table.
+	GroupsTable = &schema.Table{
+		Name:        "groups",
+		Columns:     GroupsColumns,
+		PrimaryKey:  []*schema.Column{GroupsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// PetsColumns holds the columns for the "pets" table.
 	PetsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -42,6 +90,9 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AdminsTable,
+		CardsTable,
+		GroupsTable,
 		PetsTable,
 		UsersTable,
 	}

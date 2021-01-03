@@ -5,15 +5,57 @@ package ent
 import (
 	"time"
 
+	"github.com/daymenu/gostudy/examples/ent/ent/admin"
+	"github.com/daymenu/gostudy/examples/ent/ent/group"
 	"github.com/daymenu/gostudy/examples/ent/ent/pet"
 	"github.com/daymenu/gostudy/examples/ent/ent/schema"
 	"github.com/daymenu/gostudy/examples/ent/ent/user"
+	"github.com/google/uuid"
 )
 
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	adminFields := schema.Admin{}.Fields()
+	_ = adminFields
+	// adminDescAge is the schema descriptor for age field.
+	adminDescAge := adminFields[0].Descriptor()
+	// admin.AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	admin.AgeValidator = adminDescAge.Validators[0].(func(int) error)
+	// adminDescActive is the schema descriptor for active field.
+	adminDescActive := adminFields[2].Descriptor()
+	// admin.DefaultActive holds the default value on creation for the active field.
+	admin.DefaultActive = adminDescActive.Default.(bool)
+	// adminDescCreatedAt is the schema descriptor for created_at field.
+	adminDescCreatedAt := adminFields[4].Descriptor()
+	// admin.DefaultCreatedAt holds the default value on creation for the created_at field.
+	admin.DefaultCreatedAt = adminDescCreatedAt.Default.(func() time.Time)
+	// adminDescUUID is the schema descriptor for uuid field.
+	adminDescUUID := adminFields[8].Descriptor()
+	// admin.DefaultUUID holds the default value on creation for the uuid field.
+	admin.DefaultUUID = adminDescUUID.Default.(func() uuid.UUID)
+	groupFields := schema.Group{}.Fields()
+	_ = groupFields
+	// groupDescName is the schema descriptor for name field.
+	groupDescName := groupFields[0].Descriptor()
+	// group.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	group.NameValidator = func() func(string) error {
+		validators := groupDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+			validators[2].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	petMixin := schema.Pet{}.Mixin()
 	petMixinFields0 := petMixin[0].Fields()
 	petMixinFields1 := petMixin[1].Fields()
