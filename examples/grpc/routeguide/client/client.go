@@ -25,6 +25,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"math/rand"
@@ -41,8 +42,8 @@ import (
 var (
 	tls                = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
 	caFile             = flag.String("ca_file", "", "The file containing the CA root cert file")
-	serverAddr         = flag.String("server_addr", "localhost:10000", "The server address in the format of host:port")
-	serverHostOverride = flag.String("server_host_override", "x.test.youtube.com", "The server name used to verify the hostname returned by the TLS handshake")
+	serverAddr         = flag.String("server_addr", ":10000", "The server address in the format of host:port")
+	serverHostOverride = flag.String("server_host_override", "x.test.example.com", "The server name used to verify the hostname returned by the TLS handshake")
 )
 
 // printFeature gets the feature for the given point.
@@ -156,9 +157,11 @@ func randomPoint(r *rand.Rand) *pb.Point {
 func main() {
 	flag.Parse()
 	var opts []grpc.DialOption
+
 	if *tls {
 		if *caFile == "" {
-			*caFile = data.Path("x509/ca_cert.pem")
+			*caFile = data.Path("x509/server_cert.pem")
+			log.Println(*caFile)
 		}
 		creds, err := credentials.NewClientTLSFromFile(*caFile, *serverHostOverride)
 		if err != nil {
@@ -169,14 +172,16 @@ func main() {
 		opts = append(opts, grpc.WithInsecure())
 	}
 
-	opts = append(opts, grpc.WithBlock())
+	// opts = append(opts, grpc.WithBlock())
+	// opts = append(opts, grpc.WithTimeout(20*time.Second))
+	fmt.Println("dial addr:", *serverAddr)
 	conn, err := grpc.Dial(*serverAddr, opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
 	defer conn.Close()
 	client := pb.NewRouteGuideClient(conn)
-
+	log.Println("create a client")
 	// Looking for a valid feature
 	printFeature(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
 

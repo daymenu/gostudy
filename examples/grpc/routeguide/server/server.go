@@ -221,20 +221,22 @@ func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("failed to listen: %v\n", err)
 	}
-	fmt.Printf("server is start at : localhost:%d", *port)
+	fmt.Printf("server is start at : localhost:%d\n", *port)
 	var opts []grpc.ServerOption
 	if *tls {
 		if *certFile == "" {
 			*certFile = data.Path("x509/server_cert.pem")
+			log.Println(*certFile)
 		}
 		if *keyFile == "" {
 			*keyFile = data.Path("x509/server_key.pem")
+			log.Println(*keyFile)
 		}
 		creds, err := credentials.NewServerTLSFromFile(*certFile, *keyFile)
 		if err != nil {
-			log.Fatalf("Failed to generate credentials %v", err)
+			log.Fatalf("Failed to generate credentials %v\n", err)
 		}
 		opts = []grpc.ServerOption{grpc.Creds(creds)}
 	}
