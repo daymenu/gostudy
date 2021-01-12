@@ -30,7 +30,7 @@ func main() {
 	if w1 == nil {
 		fmt.Println("w is nil")
 	}
-	os.Stdout.WriteString()
+	os.Stdout.WriteString("dd")
 	var rw io.ReadWriter
 	rw = os.Stdout
 
