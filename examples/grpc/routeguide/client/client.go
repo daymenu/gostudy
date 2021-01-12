@@ -160,7 +160,7 @@ func main() {
 
 	if *tls {
 		if *caFile == "" {
-			*caFile = data.Path("x509/server_cert.pem")
+			*caFile = data.Path("x509/ca_cert.pem")
 			log.Println(*caFile)
 		}
 		creds, err := credentials.NewClientTLSFromFile(*caFile, *serverHostOverride)
