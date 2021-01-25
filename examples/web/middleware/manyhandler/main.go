@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -24,7 +25,7 @@ func showFriendsHandler(wr http.ResponseWriter, r *http.Request) {
 	timeStart := time.Now()
 	wr.Write([]byte("your friends is tom and alex"))
 	timeElapsed := time.Since(timeStart)
-	logger.Println(timeElapsed)
+	log.Println(timeElapsed)
 }
 
 func main() {
